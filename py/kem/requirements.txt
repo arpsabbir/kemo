@@ -1,0 +1,7 @@
+beautifulsoup4==4.6.3
+Flask==1.0.2
+Flask-Script==2.0.6
+Janome==0.3.7
+requests==2.21.0
+pytest==4.0.2
+Pillow==5.3.0

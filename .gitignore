@@ -9,4 +9,7 @@ venv
 sysdic
 .cache
 *.egg-info/
+flask_template/
 matome/
+taxibell-pantry
+config.py

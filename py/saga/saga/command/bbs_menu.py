@@ -36,6 +36,5 @@ class BBSMenu(Command):
             sites.append(site.to_dict())
 
         # output yaml
-        path = "../../data/site.yaml"
-        with codecs.open(path, "w", 'utf-8') as f:
+        with codecs.open(constants.SITE_YAML, "w", 'utf-8') as f:
             yaml.dump(sites, f, encoding='utf-8', allow_unicode=True, default_flow_style=False)

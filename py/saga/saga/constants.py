@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+
 class Site(object):
     name = None
     short_name = None
@@ -22,6 +23,8 @@ class Site(object):
             "bbs": self.bbs,
         }
 
+
+SITE_YAML = "../../data/site.yaml"
 SITES = [
     Site("ロマサガRS", "sagars", "ロマサガRS", "スマホゲーム")
 ]

@@ -1,21 +1,23 @@
 # -*- coding: utf-8 -*-
-from flask_script import Command, Option
-import base64
-import io
-import os
-
-PROJECT_ID = 'dena-auto-taxifms-dev-gcp'
-project_id = PROJECT_ID
-LOCATION_ID = 'global'
-KEY_RING_ID = 'pantry'
-CRYPTO_KEY_ID = 'config'
-
+from flask_script import Command
+import requests
+from logging import getLogger
+logger = getLogger(__name__)
 
 class BBSMenu(Command):
     """
     sync BBS Menu
     """
     def run(self):
-        print("start")
+        logger.error("start")
+        self._main()
 
+    def _main(self):
+        url = 'https://menu.5ch.net/bbsmenu.html'
+        response = requests.get(url)
+        if response.ok:
+            logger.info("hoge")
+        else:
+            logger.info("hoge2")
 
+        logger.info("hoge3")

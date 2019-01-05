@@ -12,7 +12,7 @@ manager = Manager(kem.create_app(config))
 ######################
 # コマンド追加
 ######################
-manager.add_command('encrypt', BBSMenu)
+manager.add_command('sync-menu', BBSMenu)
 
 # runserver
 manager.add_command('runserver', Server(use_reloader=True))

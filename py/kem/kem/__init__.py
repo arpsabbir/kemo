@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, request, current_app
+from flask import Flask
 
 
 def create_app(config):

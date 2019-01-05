@@ -24,7 +24,9 @@ class Site(object):
         }
 
 
+GEN_RES_MIN = 600
+
 SITE_YAML = "../../data/site.yaml"
 SITES = [
-    Site("ロマサガRS", "sagars", "ロマサガRS", "スマホゲーム")
+    Site("ロマサガRS", "ロマサガRS", "sagars", "スマホゲーム")
 ]

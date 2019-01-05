@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from flask_script import Command
 from logging import getLogger
-from saga.utils import http_get
 from saga import constants
+from saga.module.scraping.search import SearchManager
 import codecs
 import yaml
 import re
@@ -24,10 +24,5 @@ class SiteGen(Command):
             sites = yaml.load(f)
 
         # subjects.txtとる
-        site = sites[0] # TODO 暫定
-        url = "{}subject.txt".format(site["url"])
-        response = http_get(url)
-        if not response.ok:
-            exit(1)
-        
-
+        sm = SearchManager(sites[0])
+        sm.search_and_scraping()

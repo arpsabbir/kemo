@@ -19,24 +19,26 @@ ignore_base = [
     '葬式',
 ]
 
+
 class Subject(object):
     dat = None
     title = None
     ct = None
 
     def __init__(self, dat, title, ct):
-        self.dat = dat
+        self.dat = int(dat)
         self.title = title
-        self.ct = ct
+        self.ct = int(ct)
 
     def execute_matome(self, force=None):
-        logger.info("start exec matome: {}".format(self.title))
+        logger.info("start exec matome: {}({})".format(self.title, str(self.ct)))
 
 
 class SearchManager(object):
     """
     スレッドを検索する
     """
+
     def __init__(self, site):
         self.site = site
 

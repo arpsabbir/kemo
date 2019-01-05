@@ -11,5 +11,5 @@ sysdic
 *.egg-info/
 flask_template/
 matome/
-taxibell-pantry
+pantry
 config.py

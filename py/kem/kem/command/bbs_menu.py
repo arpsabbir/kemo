@@ -4,10 +4,12 @@ import requests
 from logging import getLogger
 logger = getLogger(__name__)
 
+
 class BBSMenu(Command):
     """
     sync BBS Menu
     """
+
     def run(self):
         logger.error("start")
         self._main()

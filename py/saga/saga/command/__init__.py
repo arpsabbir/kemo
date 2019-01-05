@@ -2,7 +2,7 @@
 from logging import getLogger, StreamHandler, DEBUG
 
 # logを標準出力するためのおまじない
-logger = getLogger(__name__)
+logger = getLogger(getLogger.__str__())
 handler = StreamHandler()
 handler.setLevel(DEBUG)
 logger.setLevel(DEBUG)

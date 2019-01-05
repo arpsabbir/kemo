@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from logging import getLogger
 import requests
-logger = getLogger(__name__)
+logger = getLogger(getLogger.__str__())
 
 
 def http_get(url):

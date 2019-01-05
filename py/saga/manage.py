@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from flask_script import Manager, Server
-import kem
+import saga
 import config
-from kem.command.bbs_menu import BBSMenu
+from saga.command.bbs_menu import BBSMenu
 
-manager = Manager(kem.create_app(config))
+manager = Manager(saga.create_app(config))
 
 # manage.py option
 # manager.add_option('-c', '--config', dest='config', required=False)

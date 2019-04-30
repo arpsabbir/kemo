@@ -4,6 +4,7 @@ import saga
 import config
 from saga.command.bbs_menu import BBSMenu
 from saga.command.site_gen import SiteGen
+from saga.command.pb2 import Pb2
 
 manager = Manager(saga.create_app(config))
 
@@ -15,6 +16,7 @@ manager = Manager(saga.create_app(config))
 ######################
 manager.add_command('sync-menu', BBSMenu)
 manager.add_command('gen', SiteGen)
+manager.add_command('proto', Pb2)
 
 # runserver
 manager.add_command('runserver', Server(use_reloader=True))

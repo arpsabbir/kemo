@@ -78,13 +78,22 @@ class Subject(object):
             refer = sum([_normalizationa(a.text) for a in soup.find_all("a", attrs={"class": "reply_link"})], [])
             rank = int(soup.find("span", attrs={"class": "number"}).text)
             raws = soup.find("div", attrs={"class": "message"}).text.split()
-            posts.append(SubjectRaw(rank, refer, raws))
+
+            # NGワードを含んでいる場合は登録スキップ
+            include_ng_word = False
+            for line in raws:
+                if InspectionWord.inspection(line):
+                    include_ng_word = True
+                    break
+
+            if not include_ng_word:
+                posts.append(SubjectRaw(rank, refer, raws))
 
         # 全体を俯瞰してキーワード抽出する
         logger.info("--")
-        aaaaa = select_keyword(sum([post.raws for post in posts], []))
-        for a in aaaaa:
-            logger.info(a)
+        keywords = select_keyword(sum([post.raws for post in posts], []))
+        for word in keywords:
+            logger.info(word)
         logger.info("--")
 
         raise
@@ -587,6 +596,9 @@ def select_keyword(texts):
     results = []
     for key in d:
         if InspectionWord.inspection(key):  # NGワードチェック
+            continue
+
+        if InspectionWord.inspection_keyword(key):  # NGワードチェック
             continue
 
         if d[key] > 4:

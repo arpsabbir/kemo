@@ -10,3 +10,4 @@ flake8>=3.6.0
 autopep8>=1.4.3
 PyYAML>=3.13
 protobuf>=3.7.1
+nltk>=3.4.1

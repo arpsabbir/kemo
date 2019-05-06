@@ -555,7 +555,7 @@ def select_keyword(texts):
     :param texts: list(str)
     :return: list(str) キーワード一覧
     """
-    # 標準化 記号や日本語以外を排除
+    # 標準化 記号や日本語以外を排除(実装したけど使ってないから残しておいた)
     # texts = select_japanese(texts)
 
     # 標準化 1行が短い文を排除

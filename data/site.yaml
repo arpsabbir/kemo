@@ -1,5 +1,5 @@
 - bbs: スマホゲーム
-  name: ロマサガRS
+  name: gamesm
   short_name: ロマサガRS
   title: sagars
-  url: http://krsw.5ch.net/gamesm/
+  base_url: http://krsw.5ch.net

@@ -19,10 +19,6 @@ class SiteGen(Command):
         self._main()
 
     def _main(self):
-        # load yaml
-        with codecs.open(constants.SITE_YAML, "r", 'utf-8') as f:
-            sites = yaml.load(f)
-
         # subjects.txtとる
-        sm = SearchManager(sites[0])
+        sm = SearchManager(constants.SITES[0])
         sm.search_and_scraping()

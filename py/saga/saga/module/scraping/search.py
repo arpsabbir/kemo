@@ -2,6 +2,7 @@
 from saga.utils import http_get
 from logging import getLogger
 import re
+from bs4 import BeautifulSoup
 from saga import constants
 logger = getLogger(getLogger.__str__())
 
@@ -19,19 +20,66 @@ ignore_base = [
     '葬式',
 ]
 
+class SubjectRaw(object):
+    def __init__(self, rank, refer, raws):
+        """
+        :param rank: string
+        :param refer: list[string]
+        :param raws: list[string] split text by line code
+        """
+        assert isinstance(rank, int)
+        if len(refer) > 0:
+            assert isinstance(refer[0], int)
+        if len(raws) > 0:
+            assert isinstance(raws[0], str)
+        self.rank = rank
+        self.refer = refer
+        self.raws = raws
+
 
 class Subject(object):
     dat = None
     title = None
     ct = None
 
-    def __init__(self, dat, title, ct):
+    def __init__(self, site, dat, title, ct):
+        self.site = site
         self.dat = int(dat)
         self.title = title
         self.ct = int(ct)
 
     def execute_matome(self, force=None):
         logger.info("start exec matome: {}({})".format(self.title, str(self.ct)))
+        logger.info("url: {}, site: {}".format(self.url, self.site))
+
+        # TODO: まとめ実装
+
+        # url 生成
+        response = http_get(self.url)
+        if not response.ok:
+            exit(1)
+        # logger.info(response.text)
+
+        # 正規表現で投稿ごとにパースする
+        pattern = r'<div(.+?)data-userid(.+?)>(.+?)<\/span><\/div><\/div><br>'
+        matched_list = re.findall(pattern, response.text)  # => ('1543745327', '【ドラガリ】ドラガリアロストPart689', '12')
+        logger.info("res count:{}".format(len(matched_list)))
+
+        # 投稿をSubjectRawにと投入する
+        for r in matched_list:
+            soup = BeautifulSoup(r[2], 'lxml')
+
+            # [[1,2,3],[4,5,6], [7], [8,9]] をsumで畳み込んで Rubyのflattenを実現している[1,2,3,4,5,6,7,8,9]
+            refer = sum([_normalizationa(a.text) for a in soup.find_all("a", attrs={"class": "reply_link"})], [])
+            rank = int(soup.find("span", attrs={"class": "number"}).text)
+            raws = soup.find("div", attrs={"class": "message"}).text.split()
+            r = SubjectRaw(rank, refer, raws)
+        logger.info("--")
+        return
+
+    @property
+    def url(self):
+        return self.site.dat_url(self.dat)
 
 
 class SearchManager(object):
@@ -46,9 +94,9 @@ class SearchManager(object):
         site = self.site
 
         # スレッド検索
-        url = "{}subject.txt".format(site['url'])
+        url = site.subject_url
         subjects = self.get_from_url(url)
-        method = getattr(self, site['title'])
+        method = getattr(self, site.title)
         subjects_dict = method(subjects, site)
 
         # スクレイピング
@@ -76,7 +124,7 @@ class SearchManager(object):
         pattern = r'(.+?)\.dat<>(.+?) \t \((.+?)\)'
         matched_list = re.findall(pattern, response.text)  # => ('1543745327', '【ドラガリ】ドラガリアロストPart689', '12')
         logger.info("matched_list count:{}".format(len(matched_list)))
-        return [Subject(o[0], o[1], o[2]) for o in matched_list if int(o[2]) > constants.GEN_RES_MIN]
+        return [Subject(self.site, o[0], o[1], o[2]) for o in matched_list if int(o[2]) > constants.GEN_RES_MIN]
 
     def sagars(self, subjects, site):
         """
@@ -472,3 +520,15 @@ def _base_search(subjects, site, keywords, keywords_ignore):
         logger.info(subjects_dict[key_subject].title)
 
     return subjects_dict
+
+def _normalizationa(text):
+    """
+    レスを正規化してlist(int)にする
+    e.g. >>1
+    e.g. >>1-3
+    :return: list(int)
+    """
+    s = text.strip('>>')
+    if '-' not in text:
+        return [int(s)]
+    return [int(_s) for _s in s.split('-')]

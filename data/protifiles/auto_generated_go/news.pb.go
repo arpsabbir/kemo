@@ -20,42 +20,12 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
-type News_PhoneType int32
-
-const (
-	News_MOBILE News_PhoneType = 0
-	News_HOME   News_PhoneType = 1
-	News_WORK   News_PhoneType = 2
-)
-
-var News_PhoneType_name = map[int32]string{
-	0: "MOBILE",
-	1: "HOME",
-	2: "WORK",
-}
-
-var News_PhoneType_value = map[string]int32{
-	"MOBILE": 0,
-	"HOME":   1,
-	"WORK":   2,
-}
-
-func (x News_PhoneType) String() string {
-	return proto.EnumName(News_PhoneType_name, int32(x))
-}
-
-func (News_PhoneType) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_2c0382e93bed6d84, []int{0, 0}
-}
-
 type News struct {
-	Name                 string              `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Id                   int32               `protobuf:"varint,2,opt,name=id,proto3" json:"id,omitempty"`
-	Email                string              `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`
-	Phones               []*News_PhoneNumber `protobuf:"bytes,4,rep,name=phones,proto3" json:"phones,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}            `json:"-"`
-	XXX_unrecognized     []byte              `json:"-"`
-	XXX_sizecache        int32               `json:"-"`
+	Keywords             []string     `protobuf:"bytes,1,rep,name=keywords,proto3" json:"keywords,omitempty"`
+	Posts                []*News_Post `protobuf:"bytes,2,rep,name=posts,proto3" json:"posts,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}     `json:"-"`
+	XXX_unrecognized     []byte       `json:"-"`
+	XXX_sizecache        int32        `json:"-"`
 }
 
 func (m *News) Reset()         { *m = News{} }
@@ -83,103 +53,93 @@ func (m *News) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_News proto.InternalMessageInfo
 
-func (m *News) GetName() string {
+func (m *News) GetKeywords() []string {
 	if m != nil {
-		return m.Name
-	}
-	return ""
-}
-
-func (m *News) GetId() int32 {
-	if m != nil {
-		return m.Id
-	}
-	return 0
-}
-
-func (m *News) GetEmail() string {
-	if m != nil {
-		return m.Email
-	}
-	return ""
-}
-
-func (m *News) GetPhones() []*News_PhoneNumber {
-	if m != nil {
-		return m.Phones
+		return m.Keywords
 	}
 	return nil
 }
 
-type News_PhoneNumber struct {
-	Number               string         `protobuf:"bytes,1,opt,name=number,proto3" json:"number,omitempty"`
-	Type                 News_PhoneType `protobuf:"varint,2,opt,name=type,proto3,enum=news.protobuf.News_PhoneType" json:"type,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}       `json:"-"`
-	XXX_unrecognized     []byte         `json:"-"`
-	XXX_sizecache        int32          `json:"-"`
+func (m *News) GetPosts() []*News_Post {
+	if m != nil {
+		return m.Posts
+	}
+	return nil
 }
 
-func (m *News_PhoneNumber) Reset()         { *m = News_PhoneNumber{} }
-func (m *News_PhoneNumber) String() string { return proto.CompactTextString(m) }
-func (*News_PhoneNumber) ProtoMessage()    {}
-func (*News_PhoneNumber) Descriptor() ([]byte, []int) {
+type News_Post struct {
+	Rank                 int32    `protobuf:"varint,1,opt,name=rank,proto3" json:"rank,omitempty"`
+	Text                 string   `protobuf:"bytes,2,opt,name=text,proto3" json:"text,omitempty"`
+	PostAt               int32    `protobuf:"varint,3,opt,name=post_at,json=postAt,proto3" json:"post_at,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *News_Post) Reset()         { *m = News_Post{} }
+func (m *News_Post) String() string { return proto.CompactTextString(m) }
+func (*News_Post) ProtoMessage()    {}
+func (*News_Post) Descriptor() ([]byte, []int) {
 	return fileDescriptor_2c0382e93bed6d84, []int{0, 0}
 }
 
-func (m *News_PhoneNumber) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_News_PhoneNumber.Unmarshal(m, b)
+func (m *News_Post) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_News_Post.Unmarshal(m, b)
 }
-func (m *News_PhoneNumber) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_News_PhoneNumber.Marshal(b, m, deterministic)
+func (m *News_Post) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_News_Post.Marshal(b, m, deterministic)
 }
-func (m *News_PhoneNumber) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_News_PhoneNumber.Merge(m, src)
+func (m *News_Post) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_News_Post.Merge(m, src)
 }
-func (m *News_PhoneNumber) XXX_Size() int {
-	return xxx_messageInfo_News_PhoneNumber.Size(m)
+func (m *News_Post) XXX_Size() int {
+	return xxx_messageInfo_News_Post.Size(m)
 }
-func (m *News_PhoneNumber) XXX_DiscardUnknown() {
-	xxx_messageInfo_News_PhoneNumber.DiscardUnknown(m)
+func (m *News_Post) XXX_DiscardUnknown() {
+	xxx_messageInfo_News_Post.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_News_PhoneNumber proto.InternalMessageInfo
+var xxx_messageInfo_News_Post proto.InternalMessageInfo
 
-func (m *News_PhoneNumber) GetNumber() string {
+func (m *News_Post) GetRank() int32 {
 	if m != nil {
-		return m.Number
+		return m.Rank
+	}
+	return 0
+}
+
+func (m *News_Post) GetText() string {
+	if m != nil {
+		return m.Text
 	}
 	return ""
 }
 
-func (m *News_PhoneNumber) GetType() News_PhoneType {
+func (m *News_Post) GetPostAt() int32 {
 	if m != nil {
-		return m.Type
+		return m.PostAt
 	}
-	return News_MOBILE
+	return 0
 }
 
 func init() {
-	proto.RegisterEnum("news.protobuf.News_PhoneType", News_PhoneType_name, News_PhoneType_value)
 	proto.RegisterType((*News)(nil), "news.protobuf.News")
-	proto.RegisterType((*News_PhoneNumber)(nil), "news.protobuf.News.PhoneNumber")
+	proto.RegisterType((*News_Post)(nil), "news.protobuf.News.Post")
 }
 
 func init() { proto.RegisterFile("news.proto", fileDescriptor_2c0382e93bed6d84) }
 
 var fileDescriptor_2c0382e93bed6d84 = []byte{
-	// 217 bytes of a gzipped FileDescriptorProto
+	// 164 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0xca, 0x4b, 0x2d, 0x2f,
-	0xd6, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0xe2, 0x45, 0xb0, 0x93, 0x4a, 0xd3, 0x94, 0x1a, 0x98,
-	0xb8, 0x58, 0xfc, 0x52, 0xcb, 0x8b, 0x85, 0x84, 0xb8, 0x58, 0xf2, 0x12, 0x73, 0x53, 0x25, 0x18,
-	0x15, 0x18, 0x35, 0x38, 0x83, 0xc0, 0x6c, 0x21, 0x3e, 0x2e, 0xa6, 0xcc, 0x14, 0x09, 0x26, 0x05,
-	0x46, 0x0d, 0xd6, 0x20, 0xa6, 0xcc, 0x14, 0x21, 0x11, 0x2e, 0xd6, 0xd4, 0xdc, 0xc4, 0xcc, 0x1c,
-	0x09, 0x66, 0xb0, 0x22, 0x08, 0x47, 0xc8, 0x9c, 0x8b, 0xad, 0x20, 0x23, 0x3f, 0x2f, 0xb5, 0x58,
-	0x82, 0x45, 0x81, 0x59, 0x83, 0xdb, 0x48, 0x5e, 0x0f, 0xc5, 0x0a, 0x3d, 0x90, 0xf1, 0x7a, 0x01,
-	0x20, 0x15, 0x7e, 0xa5, 0xb9, 0x49, 0xa9, 0x45, 0x41, 0x50, 0xe5, 0x52, 0x11, 0x5c, 0xdc, 0x48,
-	0xc2, 0x42, 0x62, 0x5c, 0x6c, 0x79, 0x60, 0x16, 0xd4, 0x0d, 0x50, 0x9e, 0x90, 0x21, 0x17, 0x4b,
-	0x49, 0x65, 0x41, 0x2a, 0xd8, 0x1d, 0x7c, 0x46, 0xb2, 0x38, 0x4d, 0x0f, 0xa9, 0x2c, 0x48, 0x0d,
-	0x02, 0x2b, 0x55, 0xd2, 0xe6, 0xe2, 0x84, 0x0b, 0x09, 0x71, 0x71, 0xb1, 0xf9, 0xfa, 0x3b, 0x79,
-	0xfa, 0xb8, 0x0a, 0x30, 0x08, 0x71, 0x70, 0xb1, 0x78, 0xf8, 0xfb, 0xba, 0x0a, 0x30, 0x82, 0x58,
-	0xe1, 0xfe, 0x41, 0xde, 0x02, 0x4c, 0x49, 0x6c, 0x60, 0xb3, 0x8c, 0x01, 0x01, 0x00, 0x00, 0xff,
-	0xff, 0x64, 0x0e, 0xf5, 0x3d, 0x26, 0x01, 0x00, 0x00,
+	0xd6, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0xe2, 0x45, 0xb0, 0x93, 0x4a, 0xd3, 0x94, 0x66, 0x33,
+	0x72, 0xb1, 0xf8, 0xa5, 0x96, 0x17, 0x0b, 0x49, 0x71, 0x71, 0x64, 0xa7, 0x56, 0x96, 0xe7, 0x17,
+	0xa5, 0x14, 0x4b, 0x30, 0x2a, 0x30, 0x6b, 0x70, 0x06, 0xc1, 0xf9, 0x42, 0x7a, 0x5c, 0xac, 0x05,
+	0xf9, 0xc5, 0x25, 0xc5, 0x12, 0x4c, 0x0a, 0xcc, 0x1a, 0xdc, 0x46, 0x12, 0x7a, 0x28, 0x66, 0xe8,
+	0x81, 0xf4, 0xeb, 0x05, 0xe4, 0x17, 0x97, 0x04, 0x41, 0x94, 0x49, 0xb9, 0x73, 0xb1, 0x80, 0xb8,
+	0x42, 0x42, 0x5c, 0x2c, 0x45, 0x89, 0x79, 0xd9, 0x12, 0x8c, 0x0a, 0x8c, 0x1a, 0xac, 0x41, 0x60,
+	0x36, 0x48, 0xac, 0x24, 0xb5, 0xa2, 0x44, 0x82, 0x49, 0x81, 0x51, 0x83, 0x33, 0x08, 0xcc, 0x16,
+	0x12, 0xe7, 0x62, 0x07, 0x69, 0x8c, 0x4f, 0x2c, 0x91, 0x60, 0x06, 0x2b, 0x65, 0x03, 0x71, 0x1d,
+	0x4b, 0x92, 0xd8, 0xc0, 0x76, 0x18, 0x03, 0x02, 0x00, 0x00, 0xff, 0xff, 0x03, 0x23, 0xd6, 0x0f,
+	0xc1, 0x00, 0x00, 0x00,
 }

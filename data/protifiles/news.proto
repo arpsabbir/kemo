@@ -2,20 +2,12 @@ syntax = "proto3";
 package news.protobuf;
 
 message News {
-    string name = 1;
-    int32 id = 2;
-    string email = 3;
-
-    enum PhoneType {
-        MOBILE = 0;
-        HOME = 1;
-        WORK = 2;
+    message Post {
+        int32 rank = 1;
+        string text = 2;
+        int32 post_at = 3;
     }
 
-    message PhoneNumber {
-        string number = 1;
-        PhoneType type = 2;
-    }
-
-    repeated PhoneNumber phones = 4;
+    repeated string keywords = 1;
+    repeated Post posts = 2;
 }

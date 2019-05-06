@@ -20,55 +20,36 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='news.protobuf',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\nnews.proto\x12\rnews.protobuf\"\xd9\x01\n\x04News\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\n\n\x02id\x18\x02 \x01(\x05\x12\r\n\x05\x65mail\x18\x03 \x01(\t\x12/\n\x06phones\x18\x04 \x03(\x0b\x32\x1f.news.protobuf.News.PhoneNumber\x1aJ\n\x0bPhoneNumber\x12\x0e\n\x06number\x18\x01 \x01(\t\x12+\n\x04type\x18\x02 \x01(\x0e\x32\x1d.news.protobuf.News.PhoneType\"+\n\tPhoneType\x12\n\n\x06MOBILE\x10\x00\x12\x08\n\x04HOME\x10\x01\x12\x08\n\x04WORK\x10\x02\x62\x06proto3')
+  serialized_pb=_b('\n\nnews.proto\x12\rnews.protobuf\"v\n\x04News\x12\x10\n\x08keywords\x18\x01 \x03(\t\x12\'\n\x05posts\x18\x02 \x03(\x0b\x32\x18.news.protobuf.News.Post\x1a\x33\n\x04Post\x12\x0c\n\x04rank\x18\x01 \x01(\x05\x12\x0c\n\x04text\x18\x02 \x01(\t\x12\x0f\n\x07post_at\x18\x03 \x01(\x05\x62\x06proto3')
 )
 
 
 
-_NEWS_PHONETYPE = _descriptor.EnumDescriptor(
-  name='PhoneType',
-  full_name='news.protobuf.News.PhoneType',
-  filename=None,
-  file=DESCRIPTOR,
-  values=[
-    _descriptor.EnumValueDescriptor(
-      name='MOBILE', index=0, number=0,
-      serialized_options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='HOME', index=1, number=1,
-      serialized_options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='WORK', index=2, number=2,
-      serialized_options=None,
-      type=None),
-  ],
-  containing_type=None,
-  serialized_options=None,
-  serialized_start=204,
-  serialized_end=247,
-)
-_sym_db.RegisterEnumDescriptor(_NEWS_PHONETYPE)
 
-
-_NEWS_PHONENUMBER = _descriptor.Descriptor(
-  name='PhoneNumber',
-  full_name='news.protobuf.News.PhoneNumber',
+_NEWS_POST = _descriptor.Descriptor(
+  name='Post',
+  full_name='news.protobuf.News.Post',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='number', full_name='news.protobuf.News.PhoneNumber.number', index=0,
-      number=1, type=9, cpp_type=9, label=1,
+      name='rank', full_name='news.protobuf.News.Post.rank', index=0,
+      number=1, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='text', full_name='news.protobuf.News.Post.text', index=1,
+      number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='type', full_name='news.protobuf.News.PhoneNumber.type', index=1,
-      number=2, type=14, cpp_type=8, label=1,
+      name='post_at', full_name='news.protobuf.News.Post.post_at', index=2,
+      number=3, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -85,8 +66,8 @@ _NEWS_PHONENUMBER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=128,
-  serialized_end=202,
+  serialized_start=96,
+  serialized_end=147,
 )
 
 _NEWS = _descriptor.Descriptor(
@@ -97,29 +78,15 @@ _NEWS = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='name', full_name='news.protobuf.News.name', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
+      name='keywords', full_name='news.protobuf.News.keywords', index=0,
+      number=1, type=9, cpp_type=9, label=3,
+      has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='id', full_name='news.protobuf.News.id', index=1,
-      number=2, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='email', full_name='news.protobuf.News.email', index=2,
-      number=3, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='phones', full_name='news.protobuf.News.phones', index=3,
-      number=4, type=11, cpp_type=10, label=3,
+      name='posts', full_name='news.protobuf.News.posts', index=1,
+      number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -127,9 +94,8 @@ _NEWS = _descriptor.Descriptor(
   ],
   extensions=[
   ],
-  nested_types=[_NEWS_PHONENUMBER, ],
+  nested_types=[_NEWS_POST, ],
   enum_types=[
-    _NEWS_PHONETYPE,
   ],
   serialized_options=None,
   is_extendable=False,
@@ -137,23 +103,21 @@ _NEWS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=30,
-  serialized_end=247,
+  serialized_start=29,
+  serialized_end=147,
 )
 
-_NEWS_PHONENUMBER.fields_by_name['type'].enum_type = _NEWS_PHONETYPE
-_NEWS_PHONENUMBER.containing_type = _NEWS
-_NEWS.fields_by_name['phones'].message_type = _NEWS_PHONENUMBER
-_NEWS_PHONETYPE.containing_type = _NEWS
+_NEWS_POST.containing_type = _NEWS
+_NEWS.fields_by_name['posts'].message_type = _NEWS_POST
 DESCRIPTOR.message_types_by_name['News'] = _NEWS
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 News = _reflection.GeneratedProtocolMessageType('News', (_message.Message,), dict(
 
-  PhoneNumber = _reflection.GeneratedProtocolMessageType('PhoneNumber', (_message.Message,), dict(
-    DESCRIPTOR = _NEWS_PHONENUMBER,
+  Post = _reflection.GeneratedProtocolMessageType('Post', (_message.Message,), dict(
+    DESCRIPTOR = _NEWS_POST,
     __module__ = 'news_pb2'
-    # @@protoc_insertion_point(class_scope:news.protobuf.News.PhoneNumber)
+    # @@protoc_insertion_point(class_scope:news.protobuf.News.Post)
     ))
   ,
   DESCRIPTOR = _NEWS,
@@ -161,7 +125,7 @@ News = _reflection.GeneratedProtocolMessageType('News', (_message.Message,), dic
   # @@protoc_insertion_point(class_scope:news.protobuf.News)
   ))
 _sym_db.RegisterMessage(News)
-_sym_db.RegisterMessage(News.PhoneNumber)
+_sym_db.RegisterMessage(News.Post)
 
 
 # @@protoc_insertion_point(module_scope)

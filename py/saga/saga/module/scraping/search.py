@@ -62,7 +62,6 @@ class Subject(object):
         response = http_get(self.url)
         if not response.ok:
             exit(1)
-        # logger.info(response.text)
 
         # 正規表現で投稿ごとにパースする
         pattern = r'<div(.+?)data-userid(.+?)>(.+?)<\/span><\/div><\/div><br>'

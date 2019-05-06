@@ -2,6 +2,7 @@
 from saga.utils import http_get
 from logging import getLogger
 import re
+from collections import defaultdict
 from bs4 import BeautifulSoup
 from saga import constants
 from saga.utils import InspectionWord
@@ -25,20 +26,36 @@ ignore_base = [
 
 
 class SubjectRaw(object):
-    def __init__(self, rank, refer, raws):
+    id = None
+    refer_ids = None
+    raws = None
+    target_ids = []
+
+    def __init__(self, id, refer_ids, raws):
         """
-        :param rank: string
-        :param refer: list[string]
+        :param id: string
+        :param refer_ids: list[string]
         :param raws: list[string] split text by line code
         """
-        assert isinstance(rank, int)
-        if len(refer) > 0:
-            assert isinstance(refer[0], int)
+        assert isinstance(id, int)
+        if len(refer_ids) > 0:
+            assert isinstance(refer_ids[0], int)
         if len(raws) > 0:
             assert isinstance(raws[0], str)
-        self.rank = rank
-        self.refer = refer
+        self.id = id
+        self.refer_ids = refer_ids
         self.raws = raws
+
+    def add_target(self, refer_rank_id):
+        """
+        参照しているレスidをarrayで記録
+        例えば No.3 に No.5が >>3 しているなら
+        No.3のtarget_ids = [5]
+        No.5のrefer_ids = [3]となる
+        :param refer_rank_id: int
+        """
+        assert isinstance(refer_rank_id, int), "refer_rank_id:{}".format(refer_rank_id)
+        self.target_ids.append(refer_rank_id)
 
 
 class Subject(object):
@@ -74,7 +91,7 @@ class Subject(object):
             soup = BeautifulSoup(r[2], 'lxml')
 
             # [[1,2,3],[4,5,6], [7], [8,9]] をsumで畳み込んで Rubyのflattenを実現している[1,2,3,4,5,6,7,8,9]
-            refer = sum([_normalizationa(a.text) for a in soup.find_all("a", attrs={"class": "reply_link"})], [])
+            refer_ids = sum([_normalization_refer(a.text) for a in soup.find_all("a", attrs={"class": "reply_link"})], [])
             rank = int(soup.find("span", attrs={"class": "number"}).text)
             raws = soup.find("div", attrs={"class": "message"}).text.split()
 
@@ -86,14 +103,32 @@ class Subject(object):
                     break
 
             if not include_ng_word:
-                posts.append(SubjectRaw(rank, refer, raws))
+                posts.append(SubjectRaw(rank, refer_ids, raws))
 
         # 全体を俯瞰してキーワード抽出する
         logger.info("--")
         keywords = select_keyword(sum([post.raws for post in posts], []))
-        for word in keywords:
-            logger.info(word)
+
+        # debug print
+        for word, count in keywords.items():
+            logger.info("{}[{}]".format(word, str(count)))
         logger.info("--")
+
+        # referベースでツリーを構成してソートして出力
+        post_dict = {post.id: post for post in posts}
+        refer_rank = defaultdict(int)
+        for post in posts:
+            for refer_rank_id in post.refer_ids:
+                refer_rank[refer_rank_id] += 1
+                if refer_rank_id in post_dict:  # NG判定に引っかかって存在しないときがあるのでチェックする
+                    post_dict[refer_rank_id].add_target(refer_rank_id)
+        for k, v in sorted(refer_rank.items()):
+            if k not in post_dict.keys():
+                continue
+            if v < 3:
+                continue
+            logger.info("id:{}, refer_count:{}, text:{}".format(k, v, post_dict[k].raws))
+            logger.info("--")
 
         raise
 
@@ -544,7 +579,7 @@ def _base_search(subjects, site, keywords, keywords_ignore):
     return subjects_dict
 
 
-def _normalizationa(text):
+def _normalization_refer(text):
     """
     レスを正規化してlist(int)にする
     e.g. >>1
@@ -585,14 +620,13 @@ def select_keyword(texts):
                 select_keywords.append(t)
 
     # カウントする
-    from collections import defaultdict
     d = defaultdict(int)
     for keyword in select_keywords:
         d[keyword] += 1
 
     # 5以上ならキーワード認定
     # 1スレッドあたり10-20が最高
-    results = []
+    results = {}
     for key in d:
         if InspectionWord.inspection(key):  # NGワードチェック
             continue
@@ -601,7 +635,7 @@ def select_keyword(texts):
             continue
 
         if d[key] > 4:
-            results.append(key)
+            results[key] = d[key]
     return results
 
 

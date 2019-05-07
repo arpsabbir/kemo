@@ -29,7 +29,7 @@ class SubjectRaw(object):
     id = None
     refer_ids = None
     raws = None
-    target_ids = []
+    chain_rank = 1
 
     def __init__(self, id, refer_ids, raws):
         """
@@ -46,16 +46,31 @@ class SubjectRaw(object):
         self.refer_ids = refer_ids
         self.raws = raws
 
-    def add_target(self, refer_rank_id):
+    def add_chain_rank(self, v):
         """
-        参照しているレスidをarrayで記録
-        例えば No.3 に No.5が >>3 しているなら
-        No.3のtarget_ids = [5]
-        No.5のrefer_ids = [3]となる
-        :param refer_rank_id: int
+        レス合戦の長さによる重み付け
+        :param v: int
         """
-        assert isinstance(refer_rank_id, int), "refer_rank_id:{}".format(refer_rank_id)
-        self.target_ids.append(refer_rank_id)
+        self.chain_rank += v
+
+    def output_target(self, post_dict, target_index):
+        """
+        レスを全部出力
+        :param post_dict: {int: SubjectRaw}
+        :param target_index: {int: list[int]}
+        """
+        # 再帰呼び出しの行き止まり
+        if self.id not in target_index:
+            return []
+
+        result = []
+        for target_id in target_index[self.id]:
+            if target_id <= self.id:
+                continue
+            if target_id in post_dict:
+                result.append(post_dict[target_id])
+                result += post_dict[target_id].output_target(post_dict, target_index)
+        return result
 
 
 class Subject(object):
@@ -115,13 +130,17 @@ class Subject(object):
         logger.info("--")
 
         # referベースでツリーを構成してソートして出力
+        target_index = {}
         post_dict = {post.id: post for post in posts}
         refer_rank = defaultdict(int)
-        for post in posts:
-            for refer_rank_id in post.refer_ids:
+        for key in post_dict.keys():
+            for refer_rank_id in post_dict[key].refer_ids:
                 refer_rank[refer_rank_id] += 1
                 if refer_rank_id in post_dict:  # NG判定に引っかかって存在しないときがあるのでチェックする
-                    post_dict[refer_rank_id].add_target(refer_rank_id)
+                    if refer_rank_id in target_index:
+                        target_index[refer_rank_id] += [key]
+                    else:
+                        target_index[refer_rank_id] = [key]
         for k, v in sorted(refer_rank.items()):
             if k not in post_dict.keys():
                 continue
@@ -129,6 +148,25 @@ class Subject(object):
                 continue
             logger.info("id:{}, refer_count:{}, text:{}".format(k, v, post_dict[k].raws))
             logger.info("--")
+        logger.info("++++++++++++++")
+
+        # レス合戦による重み付け
+        for key in sorted(post_dict.keys(), reverse=True):
+            if post_dict[key] and post_dict[key].refer_ids:
+                for refer_id in post_dict[key].refer_ids:
+                    if refer_id in post_dict:
+                        post_dict[refer_id].add_chain_rank(post_dict[key].chain_rank)
+
+        for k, v in post_dict.items():
+            if v.chain_rank > 3 and len(v.refer_ids) == 0:
+                logger.info("++++++++++++++")
+                logger.info("id:{}, chain_rank:{}, target_ids: {}, text:{}".format(k, v.chain_rank, target_index[k], v.raws))
+                for post in v.output_target(post_dict, target_index):
+                    target = []
+                    if post.id in target_index:
+                        target = target_index[post.id]
+                    logger.info("-- id:{}, chain_rank:{}, target_ids: {}, text:{}".format(post.id, post.chain_rank, target, post.raws))
+        logger.info("--")
 
         raise
 
